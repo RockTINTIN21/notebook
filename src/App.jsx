@@ -5,7 +5,9 @@ import LeftPanel from './layouts/LeftPanel/LeftPanel.jsx';
 import JournalList from './components/JournalList/JournalList.jsx';
 import Header from './components/Header/Header.jsx';
 import Body from './layouts/Body/Body.jsx';
-import JournalAddButton from "./components/JournalAddButton/JournalAddButton.jsx";
+import JournalAddButton from './components/JournalAddButton/JournalAddButton.jsx';
+import {useState} from "react";
+import JournalForm from "./components/JournalForm/JournalForm.jsx";
 function App() {
     const data = [
         {
@@ -19,6 +21,7 @@ function App() {
             date:new Date()
         }
     ];
+
     return (
         <div className='app'>
             <LeftPanel>
@@ -43,7 +46,7 @@ function App() {
             </LeftPanel>
 
             <Body>
-                Body
+                <JournalForm></JournalForm>
             </Body>
 
 
