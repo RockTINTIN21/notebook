@@ -1,6 +1,7 @@
 import styles from './JournalForm.module.css';
 import Button from '../Button/Button.jsx';
 import {useState} from 'react';
+import cn from 'classnames';
 function JournalForm({ onSubmit }) {
     const [formValidState, setFormValidState] = useState({
         title: true,
@@ -37,10 +38,30 @@ function JournalForm({ onSubmit }) {
     };
     return (
         <form className={styles['journal-form']} onSubmit={addJournalItem}>
-            <input type="text" name='title' className={`${styles['input']} ${formValidState.title ? '' : styles['invalid']}`}/>
-            <input type="date" name='date' className={`${styles['input']} ${formValidState.date ? '' : styles['invalid']}`}/>
-            <input type="text" name='tag'/>
-            <textarea name="text" id="" cols="30" rows="10" className={`${styles['input']} ${formValidState.text ? '' : styles['invalid']}`}></textarea>
+            <div className={styles['title__header']}>
+                <input type="text"
+                       name='title'
+                       placeholder='Заголовок'
+                       className={cn(styles['input'],
+                           styles['inputTitle__header'],
+                           {[styles['invalid']]: !formValidState.title})}
+                />
+                <img src="/trash.svg" width='15px' alt="Иконка календаря"/>
+            </div>
+
+            <p>
+                <img src="/calendar.svg" width='15px' alt="Иконка календаря"/>
+                <label htmlFor="date">Дата</label>
+                <input type="date" name='date' id='date'
+                       className={`${styles['input']} ${formValidState.date ? '' : styles['invalid']}`}/>
+            </p>
+            <p>
+                <img src="/folder.svg" width='15px' alt="Иконка папки"/>
+                <label htmlFor="date">Метки</label>
+                <input type="text" name='tag' placeholder='Спорт' id='tag'/>
+            </p>
+            <textarea name="text" placeholder='Какой то текст' id="" cols="30" rows="10" className={`${styles['input']} ${formValidState.text ? '' : styles['invalid']}`}></textarea>
+
             <Button text='Сохранить'/>
         </form>
     );
