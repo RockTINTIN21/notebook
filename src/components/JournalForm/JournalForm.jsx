@@ -1,13 +1,25 @@
 import styles from './JournalForm.module.css';
 import Button from '../Button/Button.jsx';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import cn from 'classnames';
 function JournalForm({ onSubmit }) {
-    const [formValidState, setFormValidState] = useState({
+    const INITIAL_STATE = {
         title: true,
         text:true,
         date:true
-    });
+    };
+    const[formValidState, setFormValidState] = useState(INITIAL_STATE);
+    useEffect(()=>{
+        let timerID;
+        if(!formValidState.date || !formValidState.post || !formValidState.title){
+            timerID = setTimeout(()=>{
+               setFormValidState(INITIAL_STATE);
+            },2000);
+            return()=>{
+                clearTimeout(timerID);
+            };
+        }
+    }, [formValidState]);
     const addJournalItem = (e) =>{
         e.preventDefault();
         const formData = new FormData(e.target);
@@ -19,7 +31,7 @@ function JournalForm({ onSubmit }) {
         }else{
             setFormValidState(state=>({...state,title:true}));
         }
-        if(!formProps.text.trim().length){
+        if(!formProps.post.trim().length){
             setFormValidState(state=>({...state,text:false}));
             isFormValid = false;
         }else{
@@ -60,7 +72,7 @@ function JournalForm({ onSubmit }) {
                 <label htmlFor="date">Метки</label>
                 <input type="text" name='tag' placeholder='Спорт' id='tag'/>
             </p>
-            <textarea name="text" placeholder='Какой то текст' id="" cols="30" rows="10" className={`${styles['input']} ${formValidState.text ? '' : styles['invalid']}`}></textarea>
+            <textarea name="post" placeholder='Какой то текст' id="post" cols="30" rows="10" className={`${styles['input']} ${formValidState.text ? '' : styles['invalid']}`}></textarea>
 
             <Button text='Сохранить'/>
         </form>
