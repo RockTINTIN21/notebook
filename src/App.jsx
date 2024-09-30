@@ -7,10 +7,14 @@ import JournalAddButton from './components/JournalAddButton/JournalAddButton.jsx
 import JournalForm from './components/JournalForm/JournalForm.jsx';
 import {useEffect, useState} from 'react';
 import DataProvider from './components/Providers/DataProvider.jsx';
+import { v4 as uuidv4 } from 'uuid';
 
 
 function App() {
     const [journalItem, setJournalItem] = useState([]);
+    const deleteItem = (id) => {
+        setJournalItem((journalItem) => journalItem.filter(item => item.id !== id));
+    };
     useEffect(() => {
         const data = JSON.parse(localStorage.getItem('data'));
         if(data){
@@ -28,15 +32,30 @@ function App() {
         console.log('setitem:',journalItem);
     },[journalItem]);
 
-    const addItem = item =>{
-        setJournalItem(journalItem=>[...journalItem, {
-            id: journalItem.length > 0 ? Math.max(...journalItem.map(i=>i.id))+1: 1,
-            post:item.post,
-            tags:item.tag || '',
-            title:item.title,
-            date:new Date(item.date)
-
-        }]);
+    const addItem = (item) => {
+        setJournalItem((journalItem) => {
+            const existingIndex = journalItem.findIndex(j => j.id === item.id);
+            if (existingIndex !== -1) {
+                const updatedItems = [...journalItem];
+                updatedItems[existingIndex] = {
+                    ...updatedItems[existingIndex],
+                    ...item,
+                    date: new Date(item.date)
+                };
+                return updatedItems;
+            } else {
+                return [
+                    ...journalItem,
+                    {
+                        id: uuidv4(),
+                        post: item.post,
+                        tags: item.tags || '',
+                        title: item.title,
+                        date: new Date(item.date)
+                    }
+                ];
+            }
+        });
     };
 
     return (
@@ -49,7 +68,7 @@ function App() {
                 </LeftPanel>
 
                 <Body>
-                    <JournalForm onSubmit={addItem}></JournalForm>
+                    <JournalForm onSubmit={addItem} onDelete={deleteItem}/>
                 </Body>
             </div>
         </DataProvider>

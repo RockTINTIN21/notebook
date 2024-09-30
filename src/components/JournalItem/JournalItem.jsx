@@ -1,6 +1,4 @@
 import './JournalItem.css';
-import {useContext} from 'react';
-import DataContext from '../../Context/DataContext.js';
 function JournalItem({title, text, date}) {
     const formatedDate = new Intl.DateTimeFormat('ru-RU').format(date);
     return (
