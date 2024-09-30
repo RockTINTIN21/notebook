@@ -1,13 +1,21 @@
 import styles from './JournalForm.module.css';
 import Button from '../Button/Button.jsx';
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import cn from 'classnames';
+import DataContext from '../../Context/DataContext.js';
+
 function JournalForm({ onSubmit }) {
+    // useEffect(() => {
+    //     console.log('Контекст:',contextData);
+    // }, [contextData]);
     const INITIAL_STATE = {
         title: true,
         text:true,
+        tags:false,
         date:true
     };
+    const {newData} = useContext(DataContext);
+    console.log('NEWDATA:',newData);
     const[formValidState, setFormValidState] = useState(INITIAL_STATE);
     useEffect(()=>{
         let timerID;
@@ -46,6 +54,7 @@ function JournalForm({ onSubmit }) {
         if(!isFormValid){
             return;
         }
+        console.log('formProps:',formProps);
         onSubmit(formProps);
     };
     return (
@@ -57,6 +66,7 @@ function JournalForm({ onSubmit }) {
                        className={cn(styles['input'],
                            styles['inputTitle__header'],
                            {[styles['invalid']]: !formValidState.title})}
+                       defaultValue={newData.title || ''}
                 />
                 <img src="/trash.svg" width='15px' alt="Иконка календаря"/>
             </div>
@@ -65,14 +75,24 @@ function JournalForm({ onSubmit }) {
                 <img src="/calendar.svg" width='15px' alt="Иконка календаря"/>
                 <label htmlFor="date">Дата</label>
                 <input type="date" name='date' id='date'
-                       className={`${styles['input']} ${formValidState.date ? '' : styles['invalid']}`}/>
+                       className={`${styles['input']}
+                        ${formValidState.date ? '' : styles['invalid']}`}
+                       // defaultValue={new Intl.DateTimeFormat('ru-RU').format(newData.date) || ''}
+                        defaultValue={newData.da te.getFullYear()}
+
+                />
             </p>
             <p>
                 <img src="/folder.svg" width='15px' alt="Иконка папки"/>
-                <label htmlFor="date">Метки</label>
-                <input type="text" name='tag' placeholder='Спорт' id='tag'/>
+                <label htmlFor="tag">Метки</label>
+                <input type="text" name='tag' placeholder='Спорт'
+                       defaultValue={newData.tags || ''}
+                       id='tag'/>
             </p>
-            <textarea name="post" placeholder='Какой то текст' id="post" cols="30" rows="10" className={`${styles['input']} ${formValidState.text ? '' : styles['invalid']}`}></textarea>
+            <textarea name="post" placeholder='Какой то текст' id="post" cols="30" rows="10" className={`${styles['input']} 
+            ${formValidState.text ? '' : styles['invalid']}`}
+                      defaultValue={newData.post || ''}
+            />
 
             <Button text='Сохранить'/>
         </form>

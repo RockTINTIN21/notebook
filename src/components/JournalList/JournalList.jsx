@@ -13,8 +13,9 @@ function JournalList({journalItem}) {
         }
     };
 
-    return<>{journalItem.sort(sortItems).map(el=>(
-        <CardButton key={el.id}>
+    return<>
+        {journalItem.sort(sortItems).map(el=>(
+        <CardButton isJournalItem={true} data={el} key={el.id}>
             <JournalItem
                 title={el.title}
                 text={el.tag}
